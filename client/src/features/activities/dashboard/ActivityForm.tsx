@@ -13,8 +13,8 @@ const ActivityForm = ({
 
   const [formData, setFormData] = useState<Activity>(activity);
  
-  const handleInputChange =(e: any) =>{
-    const {name, value} = e.target;
+  const handleInputChange =(event: any) =>{
+    const {name, value} = event.target;
     setFormData({...formData, [name]: value})
   }
 

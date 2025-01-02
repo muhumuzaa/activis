@@ -3,27 +3,28 @@ import ActivityCard from "./ActivityCard";
 import ActivityDetails from "./ActivityDetails";
 import ActivityForm from "./ActivityForm";
 
+type ViewMode = "none" | "view" | "create" | "edit";
+
 const ActivitiesDashbaord = ({
   activities,
   viewActivityDetails,
   selectedActivity,
-  isFormOpen,
+  viewMode,
   editActivity,
   onUpdate,
   onCancel,
-  isViewing
 }: {
   activities: Activity[];
   viewActivityDetails: (id: string) => void;
   selectedActivity: Activity | null;
-  isFormOpen: boolean;
+
   editActivity: (id: string) => void;
   onUpdate: () => void;
   onCancel: () => void;
-  isViewing: boolean
+  viewMode: ViewMode;
 }) => {
   return (
-    <div className="bg-gray-100">
+    <div className="bg-gray-100 pt-16">
       <div className="max-w-7xl mx-auto h-full flex py-6 space-x-6">
         <div className="w-1/2 ">
           {activities.map((activity) => (
@@ -35,20 +36,9 @@ const ActivitiesDashbaord = ({
           ))}
         </div>
         <div className="w-1/2">
-          {isFormOpen ? (
-            <ActivityForm
-              selectedActivity={selectedActivity || null}
-              onUpdate={onUpdate}
-              onCancel = {onCancel}
-            />
-          ) : (
-            isViewing? selectedActivity && (
-              <ActivityDetails
-                selectedActivity={selectedActivity}
-                editActivity={editActivity}
-              />
-            ): <p>Choose activity to view</p>
-          )}
+        {viewMode === 'view' && selectedActivity && <ActivityDetails selectedActivity={selectedActivity} editActivity={editActivity}/>}
+        {viewMode === 'create' && <ActivityForm selectedActivity={null} onCancel={onCancel} onUpdate={onUpdate}/>}
+        {viewMode === 'edit' && selectedActivity && (<ActivityForm selectedActivity={selectedActivity} onCancel={onCancel} onUpdate={onUpdate}/>)}
         </div>
       </div>
     </div>

@@ -4,16 +4,14 @@ import NavBar from "./Navbar";
 import axios from "axios";
 import { Activity } from "../models/activity";
 
+type ViewMode = 'none' | 'view' | 'edit' | 'create';
 const App = () => {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [selectedActivity, setSelectedActivities] = useState<Activity | null>(
     null
   );
 
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isViewing, setIsViewing] = useState(false)
-
-
+  const [viewMode, setViewMode] = useState<ViewMode>('none')
 
   useEffect(() => {
     axios
@@ -26,28 +24,27 @@ const App = () => {
   const handleViewActivityDetails = (id: string) => {
     const activity = activities.find((a) => a.id === id);
     setSelectedActivities(activity || null);
-    setIsFormOpen(false);
-    setIsViewing(true);
+    setViewMode('view')
   };
 
   const handleCreateActivity = () => {
     setSelectedActivities(null)
-    setIsFormOpen(true);
+    setViewMode('create')
   };
 
   const handleEditActivity =(id: string) =>{
     const activity = activities.find(a => a.id === id);
     setSelectedActivities(activity || null);
-    setIsFormOpen(true)
+    setViewMode('edit')
   }
 
   const handleUpdateActivity = () => {
-    setIsFormOpen(false)
+    setViewMode('create')
   
   }
 
   const handleCancel = () => {
-    setIsFormOpen(false)
+    setViewMode('none')
     
     
   }
@@ -59,11 +56,11 @@ const App = () => {
         activities={activities}
         viewActivityDetails={handleViewActivityDetails}
         selectedActivity={selectedActivity}
-        isFormOpen ={isFormOpen}
+        
         editActivity ={handleEditActivity}
         onUpdate={handleUpdateActivity}
         onCancel = {handleCancel}
-        isViewing = {isViewing}
+        viewMode = {viewMode}
       />
     </div>
   );

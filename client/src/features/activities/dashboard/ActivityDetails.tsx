@@ -8,7 +8,7 @@ const ActivityDetails = ({
   editActivity: (id: string) => void
 }) => {
   return (
-    <div className="bg-white rounded-lg shadow-sm">
+    <div className="bg-white rounded-lg shadow-sm sticky top-20 z-40">
       <img
         src={`categoryImages/${selectedActivity?.category}.jpg`}
         alt={selectedActivity?.title}

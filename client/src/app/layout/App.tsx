@@ -10,8 +10,10 @@ const App = () => {
     null
   );
 
-
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isViewing, setIsViewing] = useState(false)
+
+
 
   useEffect(() => {
     axios
@@ -19,15 +21,17 @@ const App = () => {
       .then((response) => {
         setActivities(response.data);
       });
-  });
+  }, []);
 
   const handleViewActivityDetails = (id: string) => {
     const activity = activities.find((a) => a.id === id);
     setSelectedActivities(activity || null);
     setIsFormOpen(false);
+    setIsViewing(true);
   };
 
   const handleCreateActivity = () => {
+    setSelectedActivities(null)
     setIsFormOpen(true);
   };
 
@@ -42,6 +46,12 @@ const App = () => {
   
   }
 
+  const handleCancel = () => {
+    setIsFormOpen(false)
+    
+    
+  }
+
   return (
     <div>
       <NavBar createActivity={handleCreateActivity} />
@@ -52,6 +62,8 @@ const App = () => {
         isFormOpen ={isFormOpen}
         editActivity ={handleEditActivity}
         onUpdate={handleUpdateActivity}
+        onCancel = {handleCancel}
+        isViewing = {isViewing}
       />
     </div>
   );

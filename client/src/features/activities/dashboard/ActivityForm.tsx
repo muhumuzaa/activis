@@ -3,10 +3,12 @@ import { Activity } from "../../../app/models/activity";
 
 const ActivityForm = ({
   selectedActivity,
-  onUpdate
+  onUpdate,
+  onCancel
 }: {
   selectedActivity: Activity | null;
-  onUpdate: () => void
+  onUpdate: () => void;
+  onCancel: () => void
 }) => {
 
     const [formData, setFormData] = useState({
@@ -100,11 +102,10 @@ const ActivityForm = ({
             className="block border border-gray-200 rounded-lg w-full"
           />
         </div>
-
         <div className="flex justify-between mt-4 ">
-          <button className="bg-gray-400 text-white py-1 px-3" type="button">Cancel</button>
+          <button className="bg-gray-400 text-white py-1 px-3" type="button" onClick={onCancel}>Cancel</button>
           <button className="border bg-blue-500 text-white py-1 px-3" type="submit">
-            Save
+              {selectedActivity ? <>Update</>: <>Create</> } 
           </button>
         </div>
       </form>

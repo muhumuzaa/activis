@@ -9,14 +9,18 @@ const ActivitiesDashbaord = ({
   selectedActivity,
   isFormOpen,
   editActivity,
-  onUpdate
+  onUpdate,
+  onCancel,
+  isViewing
 }: {
   activities: Activity[];
   viewActivityDetails: (id: string) => void;
   selectedActivity: Activity | null;
   isFormOpen: boolean;
   editActivity: (id: string) => void;
-  onUpdate: () => void
+  onUpdate: () => void;
+  onCancel: () => void;
+  isViewing: boolean
 }) => {
   return (
     <div className="bg-gray-100">
@@ -31,10 +35,20 @@ const ActivitiesDashbaord = ({
           ))}
         </div>
         <div className="w-1/2">
-        {
-            isFormOpen ? <ActivityForm selectedActivity ={selectedActivity} onUpdate ={onUpdate}/>: (selectedActivity &&<ActivityDetails selectedActivity = {selectedActivity} editActivity ={editActivity}/>)
-        }
-          
+          {isFormOpen ? (
+            <ActivityForm
+              selectedActivity={selectedActivity || null}
+              onUpdate={onUpdate}
+              onCancel = {onCancel}
+            />
+          ) : (
+            isViewing? selectedActivity && (
+              <ActivityDetails
+                selectedActivity={selectedActivity}
+                editActivity={editActivity}
+              />
+            ): <p>Choose activity to view</p>
+          )}
         </div>
       </div>
     </div>

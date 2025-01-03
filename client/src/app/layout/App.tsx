@@ -3,8 +3,9 @@ import ActivityDashboard from "../../features/activities/dashboard/ActivityDashb
 import NavBar from "./Navbar";
 import { Activity } from "../models/activity";
 import axios from "axios";
+import { ViewMode } from "../models/viewMode";
 
-type ViewMode = "none" | "view" | "create" | "edit";
+
 
 const App = () => {
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -50,6 +51,7 @@ const App = () => {
         viewActivityDetails={handleViewActivityDetails}
         selectedActivity={selectedActivity}
         viewMode={viewMode}
+        
         onCancel ={handleCancel}
         editActivity ={handleEditActivity}
       />

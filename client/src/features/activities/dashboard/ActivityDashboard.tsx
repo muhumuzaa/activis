@@ -1,15 +1,17 @@
 import { Activity } from "../../../app/models/activity";
+import { ViewMode } from "../../../app/models/viewMode";
 import ActivityCard from "./ActivityCard";
 import ActivityDetails from "./ActivityDetails";
 import ActivityForm from "./ActivityForm";
 
-type ViewMode = 'none' | 'view' | 'create' | 'edit';
+
 
 const ActivityDashboard = ({
   activities,
   viewActivityDetails,
   selectedActivity,
   viewMode,
+ 
   onCancel,
   editActivity
   
@@ -18,6 +20,7 @@ const ActivityDashboard = ({
   viewActivityDetails: (id: string) => void;
   selectedActivity: Activity | null;
   viewMode: ViewMode;
+
   onCancel: () => void;
   editActivity: (id: string) => void
 }) => {

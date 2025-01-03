@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
-import ActivitiesDashbaord from "../../features/activities/dashboard/ActivitiesDashbaord";
+import ActivityDashboard from "../../features/activities/dashboard/ActivityDashboard";
 import NavBar from "./Navbar";
-import axios from "axios";
 import { Activity } from "../models/activity";
+import axios from "axios";
 
-type ViewMode = 'none' | 'view' | 'edit' | 'create';
+type ViewMode = "none" | "view" | "create" | "edit";
+
 const App = () => {
   const [activities, setActivities] = useState<Activity[]>([]);
-  const [selectedActivity, setSelectedActivities] = useState<Activity | null>(
+  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(
     null
   );
 
-  const [viewMode, setViewMode] = useState<ViewMode>('none')
+  const [viewMode, setViewMode] = useState<ViewMode>("none");
 
   useEffect(() => {
     axios
@@ -23,44 +24,34 @@ const App = () => {
 
   const handleViewActivityDetails = (id: string) => {
     const activity = activities.find((a) => a.id === id);
-    setSelectedActivities(activity || null);
-    setViewMode('view')
+    setSelectedActivity(activity || null);
+    setViewMode("view");
   };
 
   const handleCreateActivity = () => {
-    setSelectedActivities(null)
-    setViewMode('create')
+    setViewMode("create");
   };
 
-  const handleEditActivity =(id: string) =>{
-    const activity = activities.find(a => a.id === id);
-    setSelectedActivities(activity || null);
-    setViewMode('edit')
-  }
-
-  const handleUpdateActivity = () => {
-    setViewMode('create')
-  
-  }
-
-  const handleCancel = () => {
+  const handleCancel =() =>{
     setViewMode('none')
-    
-    
+  }
+
+  const handleEditActivity = (id: string) =>{
+    const activity = activities.find(a => a.id === id);
+    setSelectedActivity(activity || null);
+    setViewMode('edit')
   }
 
   return (
     <div>
       <NavBar createActivity={handleCreateActivity} />
-      <ActivitiesDashbaord
+      <ActivityDashboard
         activities={activities}
         viewActivityDetails={handleViewActivityDetails}
         selectedActivity={selectedActivity}
-        
+        viewMode={viewMode}
+        onCancel ={handleCancel}
         editActivity ={handleEditActivity}
-        onUpdate={handleUpdateActivity}
-        onCancel = {handleCancel}
-        viewMode = {viewMode}
       />
     </div>
   );

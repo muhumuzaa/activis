@@ -2,111 +2,51 @@ import { useState } from "react";
 import { Activity } from "../../../app/models/activity";
 
 const ActivityForm = ({
+  onCancel,
   selectedActivity,
-  onUpdate,
-  onCancel
 }: {
+  onCancel: () => void;
   selectedActivity: Activity | null;
-  onUpdate: () => void;
-  onCancel: () => void
 }) => {
+  const [formData, setFormData] = useState({
+    title: selectedActivity?.title || "",
+    category: selectedActivity?.category || "",
+  });
 
-    const [formData, setFormData] = useState({
-        title: selectedActivity?.title || '',
-        description: selectedActivity?.description || '',
-        category: selectedActivity?.category || '',
-        date: selectedActivity?.date || '',
-        venue: selectedActivity?.venue || '',
-        city: selectedActivity?.city || ''
-    });
-
-    const handleInputChange =(e) =>{
-        const {name, value} = e.target;
-        setFormData({...formData, [name]: value});
-    }
-    
-    
-
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm">
-      <form onSubmit={onUpdate}>
-        <div className="mb-4">
-          <label htmlFor="title" className="block">
+    <div>
+      <form>
+        <div>
+          <label htmlFor="title" className="w-full block">
             Title
           </label>
           <input
             name="title"
-            type="text"
+            className="w-full block "
             onChange={handleInputChange}
-            value={formData.title || ""}
-            className="block border border-gray-200 rounded-lg w-full"
+            value={formData.title}
           />
         </div>
-        <div className="mb-4">
-          <label htmlFor="description" className="block">
-            Description
-          </label>
-          <input
-            name="description"
-            type="text"
-            value={formData.description}
-            onChange={handleInputChange}
-            className="block border border-gray-200 rounded-lg w-full"
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="category" className="block">
+        <div>
+          <label htmlFor="category" className="w-full block">
             Category
           </label>
           <input
             name="category"
-            type="text"
+            className="w-full block "
+            onChange={handleInputChange}
             value={formData.category}
-            onChange={handleInputChange}
-            className="block border border-gray-200 rounded-lg w-full"
           />
         </div>
-        <div className="mb-4">
-          <label htmlFor="date" className="block">
-            Date
-          </label>
-          <input
-            name="date"
-            type="date"
-            value={formData.date}
-            onChange={handleInputChange}
-            className="block border border-gray-200 rounded-lg w-full"
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="venue" className="block">
-            Venue
-          </label>
-          <input
-            name="venue"
-            type="text"
-            value={formData.venue}
-            onChange={handleInputChange}
-            className="block border border-gray-200 rounded-lg w-full"
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="city" className="block">
-            City
-          </label>
-          <input
-            name="city"
-            type="text"
-            value={formData.city}
-            onChange={handleInputChange}
-            className="block border border-gray-200 rounded-lg w-full"
-          />
-        </div>
-        <div className="flex justify-between mt-4 ">
-          <button className="bg-gray-400 text-white py-1 px-3" type="button" onClick={onCancel}>Cancel</button>
-          <button className="border bg-blue-500 text-white py-1 px-3" type="submit">
-              {selectedActivity ? <>Update</>: <>Create</> } 
+        <div className="flex justify-between">
+          <button className="bg-gray-500 text-white p-2" onClick={onCancel}>
+            Cancel
           </button>
+          <button className="bg-red-500 text-white p-2">Update</button>
         </div>
       </form>
     </div>

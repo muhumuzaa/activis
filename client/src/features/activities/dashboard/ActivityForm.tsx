@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Activity } from "../../../app/models/activity";
+import axios from "axios";
 
 const ActivityForm = ({
   onCancel,
@@ -9,6 +10,7 @@ const ActivityForm = ({
   selectedActivity: Activity | null;
 }) => {
   const [formData, setFormData] = useState({
+    id: selectedActivity?.id || "",
     title: selectedActivity?.title || "",
     category: selectedActivity?.category || "",
     description: selectedActivity?.description || "",
@@ -18,13 +20,30 @@ const ActivityForm = ({
 
   });
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
+  const handleSubmit = (e: React.FormEvent) =>{
+    e.preventDefault();
+    
+    if (!formData?.id){
+        axios.post<Activity>('http://localhost:5000/api/activities', formData);
+        console.log('created new activity', formData);
+        
+    } else {
+        axios.put<Activity>(`http://localhost:5000/api/activities/${formData.id}`, formData);
+        console.log('updated activity', formData);
+        
+
+    }
+    
+  }
+
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="title" className="w-full block">
             Title
@@ -32,17 +51,19 @@ const ActivityForm = ({
           <input
             name="title"
             className="w-full block "
+            type="text"
             onChange={handleInputChange}
             value={formData.title}
           />
         </div>
         <div>
-          <label htmlFor="category" className="w-full block">
+          <label className="w-full block">
             Category
           </label>
           <input
             name="category"
             className="w-full block "
+            type="text"
             onChange={handleInputChange}
             value={formData.category}
           />
@@ -54,6 +75,7 @@ const ActivityForm = ({
           </label>
           <input
             name="description"
+            type="text"
             className="w-full block "
             onChange={handleInputChange}
             value={formData.description}
@@ -61,58 +83,51 @@ const ActivityForm = ({
         </div>
 
         <div>
-          <label htmlFor="category" className="w-full block">
-            Category
+          <label htmlFor="date" className="w-full block">
+            Date
           </label>
           <input
-            name="category"
+            name="date"
+            type="text"
             className="w-full block "
             onChange={handleInputChange}
-            value={formData.category}
+            value={formData.date}
           />
         </div>
 
         <div>
-          <label htmlFor="category" className="w-full block">
-            Category
+          <label htmlFor="city" className="w-full block">
+            City
           </label>
           <input
-            name="category"
+            name="city"
             className="w-full block "
+            type="text"
             onChange={handleInputChange}
-            value={formData.category}
+            value={formData.city}
           />
         </div>
 
         <div>
-          <label htmlFor="category" className="w-full block">
-            Category
+          <label htmlFor="venue" className="w-full block">
+            Venue
           </label>
           <input
-            name="category"
+            name="venue"
+            type="text"
             className="w-full block "
             onChange={handleInputChange}
-            value={formData.category}
+            value={formData.venue}
           />
         </div>
 
-        <div>
-          <label htmlFor="category" className="w-full block">
-            Category
-          </label>
-          <input
-            name="category"
-            className="w-full block "
-            onChange={handleInputChange}
-            value={formData.category}
-          />
-        </div>
+        
 
         <div className="flex justify-between">
-          <button className="bg-gray-500 text-white p-2" onClick={onCancel}>
+          <button className="bg-gray-500 text-white p-2" type="button" onClick={onCancel}>
             Cancel
           </button>
-          <button className="bg-red-500 text-white p-2">{selectedActivity? <>Update</>: <>Create</>}</button>
+          <button className="bg-red-500 text-white p-2" type="submit">{selectedActivity? <>Update</>: <>Create</>}</button>
         </div>
       </form>
     </div>

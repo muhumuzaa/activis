@@ -28,6 +28,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateActivity(Activity activity)
         {
+            activity.Date = DateTime.UtcNow;
             await Mediator.Send(new Create.Command{Activity = activity});
 
             return Ok();
@@ -37,6 +38,7 @@ namespace API.Controllers
         public async Task<ActionResult> EditActivity(Guid id, Activity activity)
         {
             activity.Id = id;
+            activity.Date = DateTime.UtcNow;
             await Mediator.Send(new Edit.Command{Activity = activity});
             return Ok();
         }

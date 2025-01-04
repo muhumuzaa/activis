@@ -14,7 +14,7 @@ const ActivityForm = ({
     title: selectedActivity?.title || "",
     category: selectedActivity?.category || "",
     description: selectedActivity?.description || "",
-    date: selectedActivity?.date || "",
+
     city: selectedActivity?.city || "",
     venue: selectedActivity?.venue || "",
 
@@ -79,19 +79,6 @@ const ActivityForm = ({
             className="w-full block "
             onChange={handleInputChange}
             value={formData.description}
-          />
-        </div>
-
-        <div>
-          <label htmlFor="date" className="w-full block">
-            Date
-          </label>
-          <input
-            name="date"
-            type="text"
-            className="w-full block "
-            onChange={handleInputChange}
-            value={formData.date}
           />
         </div>
 

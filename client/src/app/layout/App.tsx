@@ -11,11 +11,19 @@ const App = () => {
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("none");
 
+  // Helper function to sort activities by date descending
+  const sortActivitiesByDateDesc = (activities: Activity[]): Activity[] => {
+    return [...activities].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  };
+
+
+
   useEffect(() => {
     axios
       .get<Activity[]>("http://localhost:5000/api/activities")
       .then((response) => {
-        setActivities(response.data);
+        const sortedActivities = sortActivitiesByDateDesc(response.data);
+        setActivities(sortedActivities);
       })
       .catch((error) => {
         console.error("Error fetching activities:", error);
@@ -50,8 +58,8 @@ const App = () => {
   const handleDeleteActivity = async (id: string) => {
     try {
       await axios.delete(`http://localhost:5000/api/activities/${id}`);
-      // Remove deleted activity from UI
-      setActivities((prev) => prev.filter((a) => a.id !== id));
+      // Remove deleted activity from UI and sort the remaining activities
+      setActivities(prev => sortActivitiesByDateDesc(prev.filter((a) => a.id !== id)));
       // Reset view mode if the deleted activity was being viewed or edited
       if (selectedActivity?.id === id) {
         setSelectedActivity(null);
@@ -66,9 +74,8 @@ const App = () => {
 
   const handleOnCreateUpdateActivity = async (newActivity: Activity) => {
     const isUpdate = activities.some(a => a.id === newActivity.id);
-  
+
     if (isUpdate) {
-      // **Update Activity**
       try {
         // Corrected URL with double slashes
         const response = await axios.put<Activity>(
@@ -76,45 +83,47 @@ const App = () => {
           newActivity
         );
         console.log('Updated activity: ', response.data);
-  
-        // Update UI state by replacing the old activity with the updated one
+
+        // Update UI state by replacing the old activity with the updated one and sort
         setActivities(prev =>
-          prev.map(a => (a.id === response.data.id ? response.data : a))
+          sortActivitiesByDateDesc(
+            prev.map(a => (a.id === response.data.id ? response.data : a))
+          )
         );
-  
-        // Display the updated activity details
-        
-        handleViewActivityDetails(response.data.id);
+
+        // Directly set the updated activity as selected
+        setSelectedActivity(response.data);
+        setViewMode("view");
       } catch (error) {
         console.error("Error updating activity:", error);
         alert("Failed to update activity. Please try again.");
       }
     } else {
-      // **Create Activity**
+      // Create new activity
       try {
         const response = await axios.post<Activity>(
           'http://localhost:5000/api/activities',
           newActivity
         );
-  
+
         console.log("Created Activity Response:", response.data);
-  
+
         if (!response.data.id) {
           throw new Error("Created activity is missing an id.");
         }
-  
-        // Add new activity to the activities list
-        setActivities(prev => [...prev, response.data]);
-  
-        // Display the new activity details
-        handleViewActivityDetails(response.data.id);
+
+        // Add new activity to the activities list and sort
+        setActivities(prev => sortActivitiesByDateDesc([...prev, response.data]));
+
+        // Display the new activity
+        setSelectedActivity(response.data);
+        setViewMode("view");
       } catch (error) {
         console.log('Error creating an activity', error);
         alert('Error creating activity');
       }
     }
   };
-  
 
   return (
     <div>

@@ -1,7 +1,10 @@
+
 import { Activity } from "../../../app/models/activity"
 
 
-const ActivityDetails = ({selectedActivity,editActivity}: {selectedActivity: Activity , editActivity: (id: string)=>void}) => {
+const ActivityDetails = ({selectedActivity,editActivity, deleteActivity}: {selectedActivity: Activity , editActivity: (id: string)=>void, deleteActivity: (id:string) => void }) => {
+
+ 
   return (
     <div className="bg-white rounded-lg sticky top-20">
         <img src={`categoryImages/${selectedActivity?.category}.jpg`} alt="" />
@@ -14,7 +17,7 @@ const ActivityDetails = ({selectedActivity,editActivity}: {selectedActivity: Act
 
             <div className="flex justify-between">
                 <button className="bg-blue-500 text-white p-2" type="button" onClick={() =>editActivity(selectedActivity?.id)}>Edit</button>
-                <button className="bg-red-500 text-white p-2" type="button">Delete</button>
+                <button className="bg-red-500 text-white p-2" type="button" onClick={() =>deleteActivity(selectedActivity.id)}>Delete</button>
             </div>
         </div>
     </div>

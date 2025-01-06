@@ -45,18 +45,12 @@ const ActivityDashboard: React.FC<ActivityDashboardProps> = ({
               deleteActivity={deleteActivity}
             />
           )}
-          {viewMode === "create" && (
+
+          {(viewMode === "create" || viewMode === "edit") && (
             <ActivityForm
+              selectedActivity={viewMode === "edit" ? selectedActivity : null}
               onCancel={onCancel}
-              selectedActivity={null}
               onCreateUpdateActivity={onCreateUpdateActivity}
-            />
-          )}
-          {viewMode === "edit" && selectedActivity && (
-            <ActivityForm
-              onCancel={onCancel}
-              selectedActivity={selectedActivity}
-              onCreateUpdateActivity={onCreateUpdateActivity} // Optional: handle differently if editing
             />
           )}
         </div>

@@ -83,6 +83,7 @@ const App = () => {
         );
   
         // Display the updated activity details
+        
         handleViewActivityDetails(response.data.id);
       } catch (error) {
         console.error("Error updating activity:", error);

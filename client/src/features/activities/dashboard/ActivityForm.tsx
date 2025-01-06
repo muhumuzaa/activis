@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Activity } from "../../../app/models/activity";
-import axios from "axios";
+
 import { v4 as uuid } from "uuid"; // Import uuid
 
 
@@ -18,6 +18,7 @@ const ActivityForm = ({
     
 
 }) => {
+
   const [formData, setFormData] = useState<Activity>({
     id: selectedActivity?.id || "", // Will set below
     title: selectedActivity?.title || "",
@@ -28,6 +29,23 @@ const ActivityForm = ({
     date: selectedActivity?.date || "", // Will set below
   });
 
+  useEffect(() =>{
+    if(selectedActivity){
+        setFormData({...selectedActivity, date: selectedActivity.date || new Date().toISOString(),});
+    } else {
+        // Reset form for creating a new activity
+        setFormData({
+          id: "",
+          title: "",
+          category: "",
+          description: "",
+          city: "",
+          venue: "",
+          date: new Date().toISOString(),
+        });
+      }
+  }, [selectedActivity])
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -36,33 +54,18 @@ const ActivityForm = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!selectedActivity) {
+    
       // Creating a new activity
       const newActivity: Activity = {
         ...formData,
-        id: uuid(), // Generate unique ID
+        id: selectedActivity ? selectedActivity.id : uuid(), // Generate unique ID
         date: new Date().toISOString(), // Set current date
-      };
+      }
 
       await onCreateUpdateActivity(newActivity);
       
-    } else {
-      // Updating an existing activity
-      try {
-
-        
-        const response = await axios.put<Activity>(
-          `http://localhost:5000/api/activities/${selectedActivity.id}`,
-          formData
-        );
-        console.log("Updated activity:", response.data);
-        onCancel();
-      } catch (error) {
-        console.error("Error updating activity:", error);
-        alert("Failed to update activity. Please try again.");
-      }
-    }
-  };
+    } 
+  
 
   return (
     <div>
@@ -158,6 +161,6 @@ const ActivityForm = ({
       </form>
     </div>
   );
-};
 
+}
 export default ActivityForm;

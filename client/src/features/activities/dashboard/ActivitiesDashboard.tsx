@@ -4,53 +4,48 @@ import ActivityCard from "./ActivityCard";
 import ActivityDetails from "./ActivityDetails";
 import ActivityForm from "./ActivityForm";
 
-interface ActivityDashboardProps {
-  activities: Activity[];
-  viewActivityDetails: (id: string) => void;
-  selectedActivity: Activity | null;
-  viewMode: ViewMode;
-  deleteActivity: (id: string) => void;
-  onCancel: () => void;
-  editActivity: (id: string) => void;
-  onCreateUpdateActivity: (newActivity: Activity) => Promise<void>;
-}
-
-const ActivityDashboard: React.FC<ActivityDashboardProps> = ({
+const ActivitiesDashboard = ({
   activities,
   viewActivityDetails,
+  onCancel,
   selectedActivity,
   viewMode,
-  deleteActivity,
-  onCancel,
-  editActivity,
-  onCreateUpdateActivity,
+  onCreateOrUpdate,
+  onEditActivity,
+}: {
+  activities: Activity[];
+  viewActivityDetails: (id: string) => void;
+  onCancel: () => void;
+  selectedActivity: Activity | null;
+  viewMode: ViewMode;
+  onCreateOrUpdate: (newActivity: Activity) => Promise<void>;
+  onEditActivity: () => void;
 }) => {
   return (
-    <div className="bg-gray-100 py-6">
-      <div className="max-w-7xl mx-auto flex space-x-6">
+    <div className="bg-gray-100">
+      <div className="max-w-7xl mx-auto flex py-6 space-x-6">
         <div className="w-1/2">
           {activities.map((activity) => (
             <ActivityCard
               activity={activity}
-              key={activity.id} // Ensure unique key
+              key={activity.id}
               viewActivityDetails={viewActivityDetails}
             />
           ))}
         </div>
         <div className="w-1/2">
-          {viewMode === "view" && selectedActivity && (
+          {viewMode === "view" && (
             <ActivityDetails
               selectedActivity={selectedActivity}
-              editActivity={editActivity}
-              deleteActivity={deleteActivity}
+              onEditActivity={onEditActivity}
             />
           )}
 
-          {(viewMode === "create" || viewMode === "edit") && (
+          {(viewMode === "edit" || viewMode === "create") && (
             <ActivityForm
               selectedActivity={viewMode === "edit" ? selectedActivity : null}
               onCancel={onCancel}
-              onCreateUpdateActivity={onCreateUpdateActivity}
+              onCreateOrUpdate={onCreateOrUpdate}
             />
           )}
         </div>
@@ -59,4 +54,4 @@ const ActivityDashboard: React.FC<ActivityDashboardProps> = ({
   );
 };
 
-export default ActivityDashboard;
+export default ActivitiesDashboard;
